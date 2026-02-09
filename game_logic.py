@@ -1,3 +1,4 @@
+import os
 import random
 
 import ascii_art as art
@@ -62,6 +63,17 @@ def get_guess(guessed_letters: list) -> str:
             print(error)
 
 
+def clear_display() -> None:
+    """
+    Clears the displayed screen.
+    :return: None
+    """
+    if os.name == "nt":
+        os.system('cls')
+    else:
+        os.system('clear')
+
+
 def play_game():
     """
     The game main loop
@@ -73,6 +85,7 @@ def play_game():
     win = False
     print("Welcome to Snowman Meltdown!")
     while mistakes < 4:
+        clear_display()
         if display_game_state(mistakes, secret_word, guessed_letters):
             win = True
             break
