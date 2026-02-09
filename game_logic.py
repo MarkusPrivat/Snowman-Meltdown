@@ -2,6 +2,7 @@ import random
 
 import ascii_art as art
 
+
 # List of secret words
 WORDS = ["python", "git", "github", "snowman", "meltdown"]
 
@@ -14,26 +15,33 @@ def get_random_word():
     return WORDS[random.randint(0, len(WORDS) - 1)]
 
 
-def display_game_state(mistakes: int, secret_word: str, guessed_letters: list) -> None:
+def display_game_state(mistakes: int, secret_word: str, guessed_letters: list) -> bool:
     """
     Displays the game state.
     :param mistakes: how many mistakes were made.
     :param secret_word: the secret word that was chosen.
     :param guessed_letters: the guessed letter that was chosen.
-    :return: mistake: player guessed a wrong letter
+    :return: win: the secret_word was guessed
     """
+    guessed_word = ""
+    guessed = ""
     print("Secret word selected: " + secret_word)  # for testing, later remove this line
     print(art.STAGES[mistakes])
-    print("Word: ", end="")
     for letter in secret_word:
         if letter in guessed_letters:
-            print(letter, end="")
+            guessed_word += letter + " "
         else:
-            print("_", end="")
-    print()
+            guessed_word += "_ "
+    print(f"Word: {guessed_word}")
     if len(guessed_letters) > 0:
-        print(f"You guessed: {guessed_letters[-1]}")
-    return
+        for letter in guessed_letters:
+            guessed += letter + ", "
+        print(f"You already guessed: {guessed[:-2]}")
+    print()
+    if guessed_word.replace(" ", "") == secret_word:
+        return True
+    return False
+
 
 def play_game():
     """
@@ -43,17 +51,20 @@ def play_game():
     secret_word = get_random_word()
     guessed_letters = []
     mistakes = 0
+    win = False
     print("Welcome to Snowman Meltdown!")
-
-    # TODO: Build your game loop here.
     while mistakes < 4:
-        display_game_state(mistakes, secret_word, guessed_letters)
+        if display_game_state(mistakes, secret_word, guessed_letters):
+            win = True
+            break
         guess = input("Guess a letter: ").lower()
         guessed_letters.append(guess)
         if not guessed_letters[-1] in secret_word:
             mistakes += 1
-        print(mistakes) # for testing, later remove this line
-
+    if win:
+        print(f"You win! The word was {secret_word}")
+    else:
+        print(f"You lose! The word was: {secret_word}")
 
 
 if __name__ == "__main__":
