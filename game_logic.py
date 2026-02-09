@@ -43,6 +43,25 @@ def display_game_state(mistakes: int, secret_word: str, guessed_letters: list) -
     return False
 
 
+def get_guess(guessed_letters: list) -> str:
+    """
+    Get user guess, check if it is a single letter and not already guessed.
+    :return: the guessed letter
+    """
+    while True:
+        try:
+            guess = input("Guess a letter: ").lower()
+            if not len(guess) == 1:
+                raise ValueError("Invalid input: Must be a single letter.")
+            if not guess.isalpha():
+                raise ValueError("Invalid input: Must be a letter.")
+            if guess in guessed_letters:
+                raise ValueError("Invalid input: You already guessed this letter.")
+            return guess
+        except ValueError as error:
+            print(error)
+
+
 def play_game():
     """
     The game main loop
@@ -57,7 +76,7 @@ def play_game():
         if display_game_state(mistakes, secret_word, guessed_letters):
             win = True
             break
-        guess = input("Guess a letter: ").lower()
+        guess = get_guess(guessed_letters)
         guessed_letters.append(guess)
         if not guessed_letters[-1] in secret_word:
             mistakes += 1
