@@ -14,19 +14,26 @@ def get_random_word():
     return WORDS[random.randint(0, len(WORDS) - 1)]
 
 
-def display_game_state(mistakes: int, secret_word: str, guessed_letters: list):
+def display_game_state(mistakes: int, secret_word: str, guessed_letters: list) -> None:
     """
     Displays the game state.
     :param mistakes: how many mistakes were made.
     :param secret_word: the secret word that was chosen.
     :param guessed_letters: the guessed letter that was chosen.
-    :return:
+    :return: mistake: player guessed a wrong letter
     """
     print("Secret word selected: " + secret_word)  # for testing, later remove this line
     print(art.STAGES[mistakes])
-    print(f"Word: {"_" * len(secret_word)}")
-    print(f"You guessed: {guessed_letters}")
-
+    print("Word: ", end="")
+    for letter in secret_word:
+        if letter in guessed_letters:
+            print(letter, end="")
+        else:
+            print("_", end="")
+    print()
+    if len(guessed_letters) > 0:
+        print(f"You guessed: {guessed_letters[-1]}")
+    return
 
 def play_game():
     """
@@ -39,5 +46,15 @@ def play_game():
     print("Welcome to Snowman Meltdown!")
 
     # TODO: Build your game loop here.
-    display_game_state(mistakes, secret_word, guessed_letters)
-    guessed_letters.append(input("Guess a letter: ").lower())
+    while mistakes < 4:
+        display_game_state(mistakes, secret_word, guessed_letters)
+        guess = input("Guess a letter: ").lower()
+        guessed_letters.append(guess)
+        if not guessed_letters[-1] in secret_word:
+            mistakes += 1
+        print(mistakes) # for testing, later remove this line
+
+
+
+if __name__ == "__main__":
+    play_game()
