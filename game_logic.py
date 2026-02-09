@@ -25,7 +25,6 @@ def display_game_state(mistakes: int, secret_word: str, guessed_letters: list) -
     :return: win: the secret_word was guessed
     """
     guessed_word = ""
-    guessed = ""
     print("Secret word selected: " + secret_word)  # for testing, later remove this line
     print(art.STAGES[mistakes])
     for letter in secret_word:
@@ -34,14 +33,20 @@ def display_game_state(mistakes: int, secret_word: str, guessed_letters: list) -
         else:
             guessed_word += "_ "
     print(f"Word: {guessed_word}")
+
+    if guessed_word.replace(" ", "") == secret_word:
+        return True
+    return False
+
+
+def display_guessed_letters(guessed_letters: list) -> str:
+    guessed = ""
     if len(guessed_letters) > 0:
         for letter in guessed_letters:
             guessed += letter + ", "
         print(f"You already guessed: {guessed[:-2]}")
     print()
-    if guessed_word.replace(" ", "") == secret_word:
-        return True
-    return False
+
 
 
 def get_guess(guessed_letters: list) -> str:
@@ -84,18 +89,25 @@ def play_game():
     mistakes = 0
     win = False
     print("Welcome to Snowman Meltdown!")
-    while mistakes < 4:
+    while mistakes < 7:
         clear_display()
         if display_game_state(mistakes, secret_word, guessed_letters):
             win = True
             break
+        display_guessed_letters(guessed_letters)
         guess = get_guess(guessed_letters)
         guessed_letters.append(guess)
         if not guessed_letters[-1] in secret_word:
             mistakes += 1
     if win:
+        clear_display()
+        print("You safed the Snowman!")
+        print(art.STAGES[0])
         print(f"You win! The word was {secret_word}")
     else:
+        clear_display()
+        print("Ohhhh no!")
+        print(art.STAGES[7])
         print(f"You lose! The word was: {secret_word}")
 
 
