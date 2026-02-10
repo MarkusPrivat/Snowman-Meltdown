@@ -3,7 +3,6 @@ import random
 
 import ascii_art as art
 
-
 # List of secret words
 WORDS = ["python", "git", "github", "snowman", "meltdown"]
 
@@ -33,20 +32,23 @@ def display_game_state(mistakes: int, secret_word: str, guessed_letters: list) -
         else:
             guessed_word += "_ "
     print(f"Word: {guessed_word}")
-
     if guessed_word.replace(" ", "") == secret_word:
         return True
     return False
 
 
-def display_guessed_letters(guessed_letters: list) -> str:
+def display_guessed_letters(guessed_letters: list) -> None:
+    """
+    Displays the guessed letters.
+    :param guessed_letters: all letters the player guessed
+    :return: None
+    """
     guessed = ""
     if len(guessed_letters) > 0:
         for letter in guessed_letters:
             guessed += letter + ", "
         print(f"You already guessed: {guessed[:-2]}")
     print()
-
 
 
 def get_guess(guessed_letters: list) -> str:
@@ -79,6 +81,25 @@ def clear_display() -> None:
         os.system('clear')
 
 
+def display_end_screen(win: bool, secret_word: str) -> None:
+    """
+    Displays the end screen.
+    :param win: Did the player win
+    :param secret_word: What was the secret word
+    :return: None
+    """
+    if win:
+        clear_display()
+        print("You safed the Snowman!")
+        print(art.STAGES[0])
+        print(f"You win! The word was {secret_word}")
+    else:
+        clear_display()
+        print(" Ohhhh no!")
+        print(art.STAGES[7])
+        print(f"You lose! The word was: {secret_word}")
+
+
 def play_game():
     """
     The game main loop
@@ -99,16 +120,7 @@ def play_game():
         guessed_letters.append(guess)
         if not guessed_letters[-1] in secret_word:
             mistakes += 1
-    if win:
-        clear_display()
-        print("You safed the Snowman!")
-        print(art.STAGES[0])
-        print(f"You win! The word was {secret_word}")
-    else:
-        clear_display()
-        print("Ohhhh no!")
-        print(art.STAGES[7])
-        print(f"You lose! The word was: {secret_word}")
+    display_end_screen(win, secret_word)
 
 
 if __name__ == "__main__":
